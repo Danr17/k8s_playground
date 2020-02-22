@@ -1,12 +1,12 @@
-##Install
+## Install
 
-###Using folowing links
+### Using folowing links
 https://kind.sigs.k8s.io/docs/user/ingress/#using-ingress  
 https://github.com/jaegertracing/jaeger-operator  
 
-###Detailed Install
+### Detailed Install
 
-####Create a kind cluster with extraPortMappings and node-labels.
+#### Create a kind cluster with extraPortMappings and node-labels.
 
 * extraPortMappings allow the local host to make requests to the Ingress controller over ports 80/443
 * node-labels only allow the ingress controller to run on a specific node(s) matching the label selector
@@ -34,7 +34,7 @@ nodes:
 EOF
 ```
 
-####Install Contour
+#### Install Contour
 
 Install Contour and Apply kind specific patches to forward the hostPorts to the ingress controller, set taint tolerations and schedule it to the custom labelled node.
 
@@ -43,7 +43,7 @@ kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
 kubectl patch daemonsets -n projectcontour envoy -p '{"spec":{"template":{"spec":{"nodeSelector":{"ingress-ready":"true"},"tolerations":[{"key":"node-role.kubernetes.io/master","operator":"Equal","effect":"NoSchedule"}]}}}}' 
 ```
 
-####Install Jaeger 
+#### Install Jaeger 
 
 ```
 kubectl create namespace observability
