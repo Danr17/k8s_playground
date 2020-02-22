@@ -1,10 +1,10 @@
 ## Install
 
-### Using folowing links
-https://kind.sigs.k8s.io/docs/user/ingress/#using-ingress  
+### Follow the steps:
+https://kind.sigs.k8s.io/docs/user/ingress/ 
 https://github.com/jaegertracing/jaeger-operator  
 
-### Detailed Install
+### Install
 
 #### Create a kind cluster with extraPortMappings and node-labels.
 
