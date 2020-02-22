@@ -1,7 +1,7 @@
 ## Install
 
 ### Follow the steps:
-https://kind.sigs.k8s.io/docs/user/ingress/ 
+https://kind.sigs.k8s.io/docs/user/ingress/  
 https://github.com/jaegertracing/jaeger-operator  
 
 ### Install
