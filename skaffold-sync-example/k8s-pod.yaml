@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: python
+spec:
+  containers:
+  - name: python
+    image: eu.gcr.io/project_id/python-reload
+    ports:
+    - containerPort: 5000

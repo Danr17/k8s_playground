@@ -1,0 +1,11 @@
+apiVersion: skaffold/v1beta4
+kind: Config
+build:
+  artifacts:
+  - image: eu.gcr.io/project_id/python-reload
+    sync:
+      '*.py': .
+deploy:
+  kubectl:
+    manifests:
+    - k8s-**
