@@ -124,3 +124,44 @@ spec:
             path: /
             port: 8080
 ```
+
+At this stage you should see:
+
+```
+$ kubectl get pods --all-namespaces
+NAMESPACE            NAME                                         READY   STATUS      RESTARTS   AGE
+default              jaeger-hotrod-85df697fc9-7jzz8               1/1     Running     0          23m
+default              simplest-59875cd85-48nzn                     1/1     Running     0          65m
+kube-system          coredns-6955765f44-5k7dz                     1/1     Running     0          66m
+kube-system          coredns-6955765f44-vkrfg                     1/1     Running     0          66m
+kube-system          etcd-kind-control-plane                      1/1     Running     0          67m
+kube-system          kindnet-8vzb7                                1/1     Running     0          66m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running     0          67m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running     0          67m
+kube-system          kube-proxy-b9rg4                             1/1     Running     0          66m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running     0          67m
+local-path-storage   local-path-provisioner-7745554f7f-92djr      1/1     Running     0          66m
+observability        jaeger-operator-5cc9697959-h6sqr             1/1     Running     0          66m
+projectcontour       contour-6c7b6bbbc4-hsbzr                     1/1     Running     0          66m
+projectcontour       contour-6c7b6bbbc4-qxr8z                     1/1     Running     0          66m
+projectcontour       contour-certgen-6c6vv                        0/1     Completed   0          66m
+projectcontour       envoy-rt4sg                                  2/2     Running     0          66m
+```
+
+Forward port to container in order to access the application:
+
+```
+$ kubectl port-forward jaeger-hotrod-85df697fc9-7jzz8 8080 8080
+Forwarding from 127.0.0.1:8080 -> 8080
+Forwarding from [::1]:8080 -> 8080
+Unable to listen on port 8080: Listeners failed to create with the following errors: [unable to create listener: Error listen tcp4 127.0.0.1:8080: bind: address already in use unable to create listener: Error listen tcp6 [::1]:8080: bind: address already in use]
+Handling connection for 8080
+Handling connection for 8080
+Handling connection for 8080
+Handling connection for 8080
+```
+
+Now you can make requests and see the traces within Jaeger. 
+
+![Hot Rod App](hotRod.png "Hot Rod")  
+![Jager](jaeger.png "Jaeger traces")
