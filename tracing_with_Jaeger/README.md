@@ -4,9 +4,7 @@
 https://kind.sigs.k8s.io/docs/user/ingress/  
 https://github.com/jaegertracing/jaeger-operator  
 
-### Install
-
-#### Create a kind cluster with extraPortMappings and node-labels.
+### Create a kind cluster with extraPortMappings and node-labels.
 
 * extraPortMappings allow the local host to make requests to the Ingress controller over ports 80/443
 * node-labels only allow the ingress controller to run on a specific node(s) matching the label selector
@@ -34,7 +32,7 @@ nodes:
 EOF
 ```
 
-#### Install Contour
+### Install Contour
 
 Install Contour and Apply kind specific patches to forward the hostPorts to the ingress controller, set taint tolerations and schedule it to the custom labelled node.
 
@@ -43,7 +41,7 @@ kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
 kubectl patch daemonsets -n projectcontour envoy -p '{"spec":{"template":{"spec":{"nodeSelector":{"ingress-ready":"true"},"tolerations":[{"key":"node-role.kubernetes.io/master","operator":"Equal","effect":"NoSchedule"}]}}}}' 
 ```
 
-#### Install Jaeger 
+### Install Jaeger 
 
 ```
 kubectl create namespace observability
@@ -71,4 +69,58 @@ At this point you should be abel to access Jager UI by localhost
 $ kubectl get ingress
 NAME             HOSTS   ADDRESS   PORTS   AGE
 simplest-query   *                 80      11m
+```
+
+### Create example-hotrod deployment  
+
+Using https://hub.docker.com/r/jaegertracing/example-hotrod
+
+```
+$ kubectl apply -f hotrod-deployment.yaml
+```
+
+The deployment looks like:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: hotrod
+    app.kubernetes.io/instance: jaeger
+  name: jaeger-hotrod
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: hotrod
+      app.kubernetes.io/instance: jaeger
+      app.kubernetes.io/name: jaeger
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: hotrod
+        app.kubernetes.io/instance: jaeger
+        app.kubernetes.io/name: jaeger
+    spec:
+      containers:
+      - env:
+        - name: JAEGER_AGENT_HOST
+          value: simplest-agent.default.svc.cluster.local
+        - name: JAEGER_AGENT_PORT
+          value: "6831"
+        image: jaegertracing/example-hotrod:latest
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        name: jaeger-hotrod
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
 ```
