@@ -1,6 +1,6 @@
 ## Kubernetes playground
 
-This is for me to test Kubernetes and ecosystem around Kubernetes  
+This is my K8s playground. The intent is to try out Kubernetes and the ecosystem around K8s, especially the [CNCF](https://www.cncf.io/) projects.
 
 [x] [Skaffold Example](https://github.com/Danr17/k8s_playground/tree/master/skaffold-sync-example)  
 [x] [Tracing with Jaeger](https://github.com/Danr17/k8s_playground/tree/master/tracing_with_Jaeger)  
