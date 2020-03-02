@@ -1,25 +1,22 @@
 # Contour Canary Deployments
 
-I'm testing out the process to automate canary releases described on this page https://docs.flagger.app/tutorials/contour-progressive-delivery, using [Flagger](https://docs.flagger.app/) and [Contour](https://projectcontour.io/).
+I'm testing out the process to automate canary releases, following the process described at https://docs.flagger.app/tutorials/contour-progressive-delivery. [Flagger](https://docs.flagger.app/) and [Contour](https://projectcontour.io/) are used.
 
-Following this tutorial:
-https://docs.flagger.app/tutorials/contour-progressive-delivery  
-
-Unfortunatelly it failed for me, maybe I'm doing somthenig wrong.
+Unfortunatelly it failed for me, maybe I've done something wrong. I'll revisit it after a while.
 
 ## What is Flagger and Contour
 
 **Flagger** is a Kubernetes operator that automates the promotion of canary deployments using Istio, Linkerd, App Mesh, NGINX, Contour or Gloo routing for traffic shifting and Prometheus metrics for canary analysis.
 
-Most of the Service Meshes allows us to perform canary deployments, we'll see how Flagger is helping in this process.
+Most of the Service Meshes allows us to perform canary deployments, let's see how Flagger is helping in this process.
 
 **Contour** is an open source Kubernetes ingress controller providing the control plane for the Envoy edge and service proxy.​ Contour supports dynamic configuration updates and multi-team ingress delegation out of the box while maintaining a lightweight profile.
 
 Like Istio, Coutour uses Envoy as a service proxy. **Envoy** is a high performance C++ distributed proxy designed for single services and applications, as well as a communication bus and “universal data plane” designed for large microservice “service mesh” architectures.
 
-What I guess it makes **Flagger** interesting is that it implements a control loop that gradually shifts traffic to the canary while measuring key performance indicators like *HTTP requests success rate*, *requests average duration* and *pods health*. **Based on analysis of the KPIs a canary is promoted or aborted**.
+I guess, what it makes **Flagger** interesting is that it implements a control loop that gradually shifts traffic to the canary while measuring key performance indicators like *HTTP requests success rate*, *requests average duration* and *pods health*. **Based on analysis of the KPIs a canary is promoted or aborted**.
 
-Let's test this out.
+Let's see how it works.
 
 ### Create a kind cluster with extraPortMappings and node-labels.
 
@@ -93,7 +90,7 @@ deployment.apps/contour created
 daemonset.apps/envoy created
 ```
 
-deploy Contour and an Envoy daemonset in the projectcontour namespace, see the results:
+That deploys Contour and an Envoy daemonset in the projectcontour namespace:
 
 ```bash
 $ kubectl get all -n projectcontour
@@ -122,7 +119,7 @@ job.batch/contour-certgen   1/1           6s         89s
 
 ## Install Flagger in the projectcontour namespace:
 
-Below it will deploy Flagger and Prometheus configured to scrape the Contour's Envoy instances.
+Below I'll deploy Flagger and Prometheus configured to scrape the Contour's Envoy instances.
 
 ```bash
 $ kubectl apply -k github.com/weaveworks/flagger//kustomize/contour
@@ -142,7 +139,7 @@ deployment.apps/flagger-prometheus created
 deployment.apps/flagger created
 ```
 
-Notice the resource difference from previous command:
+Notice the resource difference, inspect the resource age:
 
 ```bash
 $ kubectl get all -n projectcontour
@@ -503,15 +500,15 @@ podinfo-ingress   app.example.com                valid    valid HTTPProxy
 
 ## Failed rollout
 
-Try out:
+Trying:
 
 ```bash
 kubectl -n test set image deployment/podinfo \
 podinfod=stefanprodan/podinfo:3.1.1
 ```
 
-I guess someting I'm doing wrong. Maybe because I'm not using a real domain and hack app.example.com.
-However, I may have to revisit it, or try it out with another Service Mesh. 
+I guess I'm doing something wrong. Maybe because I'm not using a real domain and hack the app.example.com.  
+However, I may have to revisit it, or try it out again, maybe with another Service Mesh. 
 
 ```bash
 $ kubectl -n test describe canary/podinfo
@@ -540,3 +537,5 @@ Events:
   Warning  Synced  2s    flagger  Rolling back podinfo.test failed checks threshold reached 0
   Warning  Synced  2s    flagger  Canary failed! Scaling down podinfo.test
 ```
+
+Anyway the concepts are really cool as you can customize for your own KPIs, so definetely it diserves a try.
