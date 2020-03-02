@@ -8,4 +8,5 @@ This is for me to test Kubernetes and ecosystem around Kubernetes
 
 ### TODO
 
-https://docs.flagger.app/tutorials/contour-progressive-delivery
+https://docs.flagger.app/tutorials/contour-progressive-delivery  
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/  
