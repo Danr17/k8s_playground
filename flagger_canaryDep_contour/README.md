@@ -538,4 +538,4 @@ Events:
   Warning  Synced  2s    flagger  Canary failed! Scaling down podinfo.test
 ```
 
-Anyway the concepts are really cool as you can customize for your own KPIs, so definetely it diserves a try.
+Anyway the concepts are really cool as you can customize for your own KPIs, so definitely it diserve a try.
